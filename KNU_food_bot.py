@@ -9,7 +9,7 @@ from datetime import datetime
 # today = str(dt.month) + "월 " + str(dt.day)+ "일"
 
 # Slack 정보
-my_Token = "xoxb-1999813266115-3164773968226-ZEpI0X1NBvkD4eWRqYl89DNx"
+my_Token = "my_Tok"
 my_channel = '#knu'
 
 def post_message(token, channel, text):
