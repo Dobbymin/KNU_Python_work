@@ -4,12 +4,8 @@ import schedule
 import time
 from datetime import datetime
 
-# 오늘 날짜
-# dt = datetime.datetime.now()
-# today = str(dt.month) + "월 " + str(dt.day)+ "일"
-
 # Slack 정보
-my_Token = "my_Tok"
+my_Token = "xoxb-1999813266115-3164773968226-rsxkb9zMI6wvSnARovBdYV6X"
 my_channel = '#knu'
 
 def post_message(token, channel, text):
@@ -85,8 +81,8 @@ def slack_run_time():
     post_message(my_Token, my_channel, meal_time[2])
     post_message(my_Token, my_channel, today_food[2])
 
-#매일 00:01마다 동작 
-schedule.every().day.at("00:01").do(slack_run_time) 
+#매일 00:05마다 동작 
+schedule.every().day.at("00:05").do(slack_run_time) 
     
 #무한 루프
 while True: 
