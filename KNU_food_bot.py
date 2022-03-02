@@ -5,7 +5,7 @@ import time
 from datetime import datetime
 
 # Slack 정보
-my_Token = "xoxb-1999813266115-3164773968226-rsxkb9zMI6wvSnARovBdYV6X"
+my_Token = "my_Token"
 my_channel = '#knu'
 
 def post_message(token, channel, text):
