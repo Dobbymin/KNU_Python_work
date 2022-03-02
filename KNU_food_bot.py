@@ -67,6 +67,14 @@ dinner = meal_time[2] + today_food[2]
 
 title = "[" + today_date + " " + weekdays_dict[weekdays] + "요일" + " 도미토랑 식단표]"
 
+# 출력
+print(title)
+print(moring)
+print()
+print(lunch)
+print()
+print(dinner)
+
 # Slack 전송
 def slack_run_time():
     post_message(my_Token, my_channel, title)
