@@ -4,11 +4,11 @@ import datetime
 import requests
 
 # 업비트 api 정보
-access = "LtlOYx7RSN4ob5PYGAKW3XbOwupjPQIhx6yKiDas"
-secret = "kR7B0hwV9l82m7x5tj70GAcml9u9RiYa8FudaZt1"
+access = 
+secret = 
 
 # Slack 정보
-myToken = "xoxb-1999813266115-3231237631715-T6aSY3q14nZCBIfqhL9jx4rO"
+myToken =
 
 def post_message(token, channel, text):
     """슬랙 메시지 전송"""
