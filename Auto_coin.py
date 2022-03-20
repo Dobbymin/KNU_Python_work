@@ -3,22 +3,12 @@ import pyupbit
 import datetime
 import requests
 
-# 업비트 api & Slack 토큰값 불러오기
-# f = open("E:/Python_Project/Auto coin/My_api.txt", "r")
-# lines = f.readlines()
-# f.close()
-
 # 업비트 api 정보
-access = "abcd"
-secret = "abcd"
+access = "LtlOYx7RSN4ob5PYGAKW3XbOwupjPQIhx6yKiDas"
+secret = "kR7B0hwV9l82m7x5tj70GAcml9u9RiYa8FudaZt1"
 
 # Slack 정보
-myToken = "abcd"
-channel_name = "#coin"
-
-# coin 정보
-coin = "ETH"
-best_k = 0.1
+myToken = "xoxb-1999813266115-3231237631715-T6aSY3q14nZCBIfqhL9jx4rO"
 
 def post_message(token, channel, text):
     """슬랙 메시지 전송"""
@@ -29,7 +19,7 @@ def post_message(token, channel, text):
 
 def get_target_price(ticker, k):
     """변동성 돌파 전략으로 매수 목표가 조회"""
-    df = pyupbit.get_ohlcv(ticker, interval="day", count = 2)
+    df = pyupbit.get_ohlcv(ticker, interval="day", count=2)
     target_price = df.iloc[0]['close'] + (df.iloc[0]['high'] - df.iloc[0]['low']) * k
     return target_price
 
@@ -56,43 +46,40 @@ def get_balance(ticker):
                 return 0
     return 0
 
-def get_current_price(ticker):
-    """현재가 조회"""
-    return pyupbit.get_orderbook(tickers=ticker)[0]["orderbook_units"][0]["ask_price"]
+# def get_current_price(ticker):
+#     """현재가 조회"""
+#     return pyupbit.get_orderbook(tickers=ticker)["orderbook_units"][0]["ask_price"]
 
 # 로그인
 upbit = pyupbit.Upbit(access, secret)
-
-start_msg = ("[자동매매 시작]")
-print(start_msg)
-
+print("autotrade start")
 # 시작 메세지 슬랙 전송
-post_message(myToken, channel_name, start_msg)
+post_message(myToken,"#coin", "autotrade start")
 
 while True:
     try:
         now = datetime.datetime.now()
-        start_time = get_start_time({"KRW-" + coin})
+        start_time = get_start_time("KRW-ETH")
         end_time = start_time + datetime.timedelta(days=1)
 
         if start_time < now < end_time - datetime.timedelta(seconds=10):
-            target_price = get_target_price({"KRW-" + coin}, best_k) # K 값
-            ma15 = get_ma15({"KRW-" + coin})
-            current_price = get_current_price({"KRW-" + coin})
+            target_price = get_target_price("KRW-ETH", 0.1)
+            ma15 = get_ma15("KRW-ETH")
+            current_price = pyupbit.get_current_price("KRW-ETH")
             if target_price < current_price and ma15 < current_price:
                 krw = get_balance("KRW")
                 if krw > 5000:
-                    buy_result = upbit.buy_market_order({"KRW-" + coin}, krw*0.9995)
-                    post_message(myToken, channel_name, {coin + "매수 체결: "} + str(buy_result))
+                    buy_result = upbit.buy_market_order("KRW-ETH", krw*0.9995)
+                    post_message(myToken,"#coin", "ETH buy : " +str(buy_result))
         else:
-            my_coin = get_balance(coin)
-            if my_coin > 0.00008:
-                sell_result = upbit.sell_market_order({"KRW-" + coin}, my_coin*0.9995)
-                post_message(myToken, channel_name, {coin + "매도 체결 : "} + str(sell_result))
+            eth = get_balance("ETH")
+            if eth > 0.00008:
+                sell_result = upbit.sell_market_order("KRW-ETH", eth*0.9995)
+                post_message(myToken,"#coin", "ETH sell : " +str(sell_result))
                 cash  = upbit.get_balance()
                 post_message(myToken, channel_name,"보유현금 : "+ str(cash) + "원")
         time.sleep(1)
     except Exception as e:
         print(e)
-        post_message(myToken, channel_name, e)
+        post_message(myToken,"#coin", e)
         time.sleep(1)
