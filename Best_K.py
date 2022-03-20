@@ -2,7 +2,7 @@ import pyupbit
 import numpy as np
 
 # Coin 이름 입력
-coin = "ETC"
+coin = "ETH"
 
 def get_ror(k=0.5):
     df = pyupbit.get_ohlcv({"KRW-" + coin}, count=7)
