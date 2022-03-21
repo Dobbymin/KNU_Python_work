@@ -6,9 +6,11 @@ import requests
 # 업비트 api 정보
 access = 
 secret = 
-
+coin = "ETH"
+best_K = 0.2
 # Slack 정보
 myToken =
+channel_name = "#coin"
 
 def post_message(token, channel, text):
     """슬랙 메시지 전송"""
@@ -52,34 +54,33 @@ def get_balance(ticker):
 
 # 로그인
 upbit = pyupbit.Upbit(access, secret)
-print("autotrade start")
+print("[자동매매 시작]")
 # 시작 메세지 슬랙 전송
-post_message(myToken,"#coin", "autotrade start")
+post_message(myToken, channel_name, "[자동매매 시작]")
 
 while True:
     try:
         now = datetime.datetime.now()
-        start_time = get_start_time("KRW-ETH")
+        start_time = get_start_time("KRW-"+ coin)
         end_time = start_time + datetime.timedelta(days=1)
 
         if start_time < now < end_time - datetime.timedelta(seconds=10):
-            target_price = get_target_price("KRW-ETH", 0.1)
-            ma15 = get_ma15("KRW-ETH")
-            current_price = pyupbit.get_current_price("KRW-ETH")
+            target_price = get_target_price("KRW-"+ coin, best_K)
+            ma15 = get_ma15("KRW-"+ coin)
+            current_price = pyupbit.get_current_price("KRW-"+ coin)
             if target_price < current_price and ma15 < current_price:
                 krw = get_balance("KRW")
                 if krw > 5000:
-                    buy_result = upbit.buy_market_order("KRW-ETH", krw*0.9995)
-                    post_message(myToken,"#coin", "ETH buy : " +str(buy_result))
+                    buy_result = upbit.buy_market_order("KRW-"+ coin, krw*0.9995)
+                    post_message(myToken, channel_name, "ETH 매수 : " +str(buy_result))
         else:
-            eth = get_balance("ETH")
-            if eth > 0.00008:
-                sell_result = upbit.sell_market_order("KRW-ETH", eth*0.9995)
-                post_message(myToken,"#coin", "ETH sell : " +str(sell_result))
-                cash  = upbit.get_balance()
-                post_message(myToken, channel_name,"보유현금 : "+ str(cash) + "원")
+            my_coin = get_balance(coin)
+            if my_coin > 0.00008:
+                sell_result = upbit.sell_market_order("KRW-"+ coin, my_coin*0.9995)
+                post_message(myToken, channel_name, "ETH 매도 : " +str(sell_result))
         time.sleep(1)
+        
     except Exception as e:
         print(e)
-        post_message(myToken,"#coin", e)
+        post_message(myToken, channel_name, e)
         time.sleep(1)
