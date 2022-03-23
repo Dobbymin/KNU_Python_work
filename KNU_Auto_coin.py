@@ -54,9 +54,13 @@ def get_balance(ticker):
 
 # 로그인
 upbit = pyupbit.Upbit(access, secret)
+cash = upbit.get_balance()
 print("[자동매매 시작]")
+print("보유자산 : " + str(cash))
+
 # 시작 메세지 슬랙 전송
 post_message(myToken, channel_name, "[자동매매 시작]")
+post_message(myToken, channel_name, "보유자산 : " + str(cash))
 
 while True:
     try:
@@ -72,12 +76,13 @@ while True:
                 krw = get_balance("KRW")
                 if krw > 5000:
                     buy_result = upbit.buy_market_order("KRW-"+ coin, krw*0.9995)
-                    post_message(myToken, channel_name, "ETH 매수 : " +str(buy_result))
+                    post_message(myToken, channel_name, coin +" 매수 : " +str(buy_result))
         else:
             my_coin = get_balance(coin)
             if my_coin > 0.00008:
                 sell_result = upbit.sell_market_order("KRW-"+ coin, my_coin*0.9995)
-                post_message(myToken, channel_name, "ETH 매도 : " +str(sell_result))
+                post_message(myToken, channel_name, coin +" 매도 : " +str(sell_result))
+                post_message(myToken, channel_name, "보유자산 : " + str(cash))
         time.sleep(1)
         
     except Exception as e:
