@@ -64,15 +64,22 @@ dinner = meal_time[2] + today_food[2]
 title = "[" + today_date + " " + weekdays_dict[weekdays] + "요일" + " 도미토랑 식단표]"
 
 # 출력
+message = title + "\n" + moring + "\n\n" + lunch + "\n\n" + dinner
+print(message)
+'''
 print(title)
 print(moring)
 print()
 print(lunch)
 print()
 print(dinner)
-
+'''
 # Slack 전송
 def slack_run_time():
+message_slack = title + "\n" + moring + "\n\n" + lunch + "\n\n" + dinner
+    post_message(my_Token, my_channel, message_slack)
+
+'''def slack_run_time():
     post_message(my_Token, my_channel, title)
     post_message(my_Token, my_channel, meal_time[0])
     post_message(my_Token, my_channel, today_food[0])
@@ -80,7 +87,7 @@ def slack_run_time():
     post_message(my_Token, my_channel, today_food[1])
     post_message(my_Token, my_channel, meal_time[2])
     post_message(my_Token, my_channel, today_food[2])
-
+'''
 #매일 00:05마다 동작 
 schedule.every().day.at("00:05").do(slack_run_time) 
     
