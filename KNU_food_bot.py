@@ -41,7 +41,7 @@ meal_time = {
 
 # 메뉴 크롤링
 month = "03"
-url = "https://dorm.knu.ac.kr/scdorm/_new_ver/newlife/05.php?type=diary_form&mode=diary&year=2022&month=" + month + "&get_mode=2"
+url = "https://dorm.knu.ac.kr/_new_ver/newlife/05.php?type=diary_form&mode=diary&year=2023&month="+ month + "&get_mode=3"
 raw = requests.get(url)
 
 html = bs4.BeautifulSoup(raw.content.decode('euc-kr', 'replace'), 'html.parser')
@@ -73,9 +73,11 @@ print()
 print(lunch)
 print()
 print(dinner)
+
+
+def slack_run_time():
 '''
 # Slack 전송
-def slack_run_time():
 message_slack = title + "\n" + moring + "\n\n" + lunch + "\n\n" + dinner
     post_message(my_Token, my_channel, message_slack)
 
@@ -87,7 +89,7 @@ message_slack = title + "\n" + moring + "\n\n" + lunch + "\n\n" + dinner
     post_message(my_Token, my_channel, today_food[1])
     post_message(my_Token, my_channel, meal_time[2])
     post_message(my_Token, my_channel, today_food[2])
-'''
+
 #매일 00:05마다 동작 
 schedule.every().day.at("00:05").do(slack_run_time) 
     
@@ -95,3 +97,4 @@ schedule.every().day.at("00:05").do(slack_run_time)
 while True: 
     schedule.run_pending() 
     time.sleep(1)
+'''
